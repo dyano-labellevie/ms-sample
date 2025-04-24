@@ -1,5 +1,5 @@
 import { ThisError } from '../../../../error/this-error';
-import { GetToCartCommand } from './get-to-cart.command';
+import { GetToCartQuery } from './get-to-cart.query';
 
 /**
  * 入力用ポート
@@ -8,5 +8,5 @@ import { GetToCartCommand } from './get-to-cart.command';
  */
 export interface GetToCartUseCase {
   getItems(): Promise<void | ThisError>;
-  getItem(cmd: GetToCartCommand): Promise<void | ThisError>;
+  getItem(query: GetToCartQuery): Promise<void | ThisError>;
 }

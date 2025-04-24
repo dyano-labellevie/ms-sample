@@ -11,17 +11,17 @@ export interface SaveCartPort {
     items: { skuCode: string; price: number; quantity: number }[];
   }): Promise<void | ThisError>;
 
-  saveCart(cart: {
-    id: number;
-    userUuid: string;
-    cartCode: string;
-  }): Promise<void | ThisError>;
-
   saveCartItem(cartItem: {
     id: number;
     skuCode: string;
     price: number;
     quantity: number;
     cartId: number;
+  }): Promise<void | ThisError>;
+
+  saveCart(cart: {
+    id: number;
+    userUuid: string;
+    cartCode: string;
   }): Promise<void | ThisError>;
 }

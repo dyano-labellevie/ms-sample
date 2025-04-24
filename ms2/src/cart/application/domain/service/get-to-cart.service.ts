@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ThisError } from '../../../../error/this-error';
 import { GetToCartUseCase } from '../../port/in/get-to-cart.usecase';
-import { GetToCartCommand } from '../../port/in/get-to-cart.command';
+import { GetToCartQuery } from '../../port/in/get-to-cart.query';
 import { GetCartPort } from '../../port/out/get-cart.port';
 
 /**
@@ -24,10 +24,10 @@ export class GetToCartService implements GetToCartUseCase {
 
   /**
    * Cartを取得する
-   * @param cmd
+   * @param query
    * @returns
    */
-  public async getItem(cmd: GetToCartCommand): Promise<void | ThisError> {
-    return await this.cartRepository.findOne(cmd.cartId);
+  public async getItem(query: GetToCartQuery): Promise<void | ThisError> {
+    return await this.cartRepository.findOne(query.cartId);
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Inject } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { GetToCartCommandRequest } from '../command/get-to-cart.command.request';
+import { GetToCartQueryRequest } from '../query/get-to-cart.query.request';
 import { AddToCartItemCommandRequest } from '../command/add-to-cart-item.command.request';
 import { AddToCartCommandRequest } from '../command/add-to-cart.command.request';
 import { DeleteToCartCommandRequest } from '../command/delete-to-cart.command.request';
@@ -29,14 +29,14 @@ export class CartController {
   @Get(':userId')
   // @TODO 本来はもっと実装が必要
   public async getToCart(@Param('userId') id: number) {
-    const [cmd, cmdError] = GetToCartCommandRequest.createCommand(id);
+    const [query, queryError] = GetToCartQueryRequest.createQuery(id);
     // このエラーはバリデーションエラー
-    if (cmdError) {
+    if (queryError) {
       // @TODO エラーレスポンスを返す
       return
     }
 
-    return this.getToCartService.getItem(cmd)
+    return this.getToCartService.getItem(query)
   }
 
   @MessagePattern('dbserver1.public.cart_items')
@@ -47,11 +47,7 @@ export class CartController {
 
     const { payload } = message;
 
-    if (!payload) {
-      return;
-    }
-
-    if (!payload.op) {
+    if (!payload || !payload.op) {
       return;
     }
 
@@ -84,11 +80,7 @@ export class CartController {
 
     const { payload } = message;
 
-    if (!payload) {
-      return;
-    }
-
-    if (!payload.op) {
+    if (!payload || !payload.op) {
       return;
     }
 

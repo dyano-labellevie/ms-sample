@@ -3,9 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AddToCartService } from './application/domain/service/add-to-cart.service';
 import { GetToCartService } from './application/domain/service/get-to-cart.service';
 import { DeleteToCartService } from './application/domain/service/delete-to-cart.service';
-import { StockService } from './adapter/out/service/stock.service';
 import { CartRepository } from './adapter/out/repository/cart.repository';
-import { CartEventProducer } from './adapter/out/producer/cart-event.producer';
 import { CartController } from './adapter/in/web/cart.controller';
 
 @Module({
@@ -43,17 +41,9 @@ import { CartController } from './adapter/in/web/cart.controller';
       useClass: DeleteToCartService,
     },
     {
-      provide: 'StockService',
-      useClass: StockService,
-    },
-    {
       provide: 'CartRepository',
       useClass: CartRepository,
     },
-    {
-      provide: 'CartEventProducer',
-      useClass: CartEventProducer,
-    }
-  ]
+  ],
 })
 export class CartModule {}

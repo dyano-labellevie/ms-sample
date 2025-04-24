@@ -2,7 +2,6 @@ import { ThisError } from '../../../../error/this-error';
 import { Cart } from './cart.entity';
 import { Sku } from './sku.value';
 import { CartItem } from './cart-item.value';
-import { AddedToCartStateEvent } from '../event/added-to-cart-state.event';
 
 describe('Cart（エンティティ、集約）', () => {
   describe('.init', () => {
@@ -109,7 +108,6 @@ describe('Cart（エンティティ、集約）', () => {
       sut = cart;
       // 念の為チェックを入れておく
       expect(sut.isEmpty()).toBe(true);
-      expect(sut.occurredEvents).toStrictEqual([]);
     });
 
     test('カートに商品が追加され、イベントも残る', () => {
@@ -124,16 +122,6 @@ describe('Cart（エンティティ、集約）', () => {
         price: 1000,
         quantity: 1
       }]);
-      expect(sut.occurredEvents[0]).toBeInstanceOf(AddedToCartStateEvent);
-      expect(sut.occurredEvents[0]).toEqual({
-        userUuid: 'user_uuid',
-        cartCode: '69e0680aaf63792ed09be1dd0700490417b8e8cb687d0366149f7472b8e0d092',
-        item: {
-          price: 1000,
-          quantity: 1,
-          skuCode: 'sku1',
-        },
-      });
     });
 
     test('同一商品が追加された場合、数量（quantity）が増える（イベントはaddItemの回数分残る）', () => {
@@ -148,24 +136,6 @@ describe('Cart（エンティティ、集約）', () => {
         price: 1000,
         quantity: 2
       }]);
-      // イベントは2つ
-      expect(sut.occurredEvents).toEqual([{
-        userUuid: 'user_uuid',
-        cartCode: '69e0680aaf63792ed09be1dd0700490417b8e8cb687d0366149f7472b8e0d092',
-        item: {
-          skuCode: 'sku1',
-          price: 1000,
-          quantity: 1
-        }
-      }, {
-        userUuid: 'user_uuid',
-        cartCode: '69e0680aaf63792ed09be1dd0700490417b8e8cb687d0366149f7472b8e0d092',
-        item: {
-          skuCode: 'sku1',
-          price: 1000,
-          quantity: 1
-        }
-      }]);
     });
 
     test('数量を0以下で追加しようとしたらエラー', () => {
@@ -175,7 +145,6 @@ describe('Cart（エンティティ、集約）', () => {
 
       expect(error).toBeInstanceOf(ThisError);
       expect(sut.isEmpty()).toBe(true);
-      expect(sut.occurredEvents).toStrictEqual([]);
     });
   });
 });

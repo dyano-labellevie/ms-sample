@@ -21,7 +21,7 @@ export class DeleteToCartService implements DeleteToCartUseCase {
    */
   public async deleteItem(cmd: DeleteToCartCommand): Promise<void | ThisError> {
     // Cartを削除する
-    await this.cartRepository.deleteItem({
+    await this.cartRepository.delete({
       cartId: cmd.cartId,
     });
   }

@@ -54,16 +54,6 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     }
   }
 
-  async saveCart(cart: {
-    id: number;
-    userUuid: string;
-    cartCode: string;
-  }): Promise<void> {
-    await this.drizzle
-      .insert(schema.carts)
-      .values({ ...cart });
-  }
-
   async saveCartItem(cartItem: {
     id: number;
     skuCode: string;
@@ -85,12 +75,14 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
       .values({ ...cartItem });
   }
 
-  async deleteCart(cart: {
-    cartId: number;
+  async saveCart(cart: {
+    id: number;
+    userUuid: string;
+    cartCode: string;
   }): Promise<void> {
     await this.drizzle
-      .delete(schema.carts)
-      .where(eq(schema.carts.id, cart.cartId));
+      .insert(schema.carts)
+      .values({ ...cart });
   }
 
   async deleteCartItem(cart: {
@@ -99,5 +91,13 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     await this.drizzle
       .delete(schema.cartItems)
       .where(eq(schema.cartItems.cartId, cart.cartId));
+  }
+
+  async deleteCart(cart: {
+    cartId: number;
+  }): Promise<void> {
+    await this.drizzle
+      .delete(schema.carts)
+      .where(eq(schema.carts.id, cart.cartId));
   }
 }

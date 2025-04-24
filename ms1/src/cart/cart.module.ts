@@ -4,7 +4,6 @@ import { AddToCartService } from './application/domain/service/add-to-cart.servi
 import { DeleteToCartService } from './application/domain/service/delete-to-cart.service';
 import { StockService } from './adapter/out/service/stock.service';
 import { CartRepository } from './adapter/out/repository/cart.repository';
-import { CartEventProducer } from './adapter/out/producer/cart-event.producer';
 import { CartController } from './adapter/in/web/cart.controller';
 
 @Module({
@@ -44,10 +43,6 @@ import { CartController } from './adapter/in/web/cart.controller';
     {
       provide: 'CartRepository',
       useClass: CartRepository,
-    },
-    {
-      provide: 'CartEventProducer',
-      useClass: CartEventProducer,
     }
   ]
 })

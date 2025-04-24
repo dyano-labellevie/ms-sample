@@ -5,11 +5,11 @@ import { ThisError } from '../../../../error/this-error';
  * アダプタが実装する
  */
 export interface DeleteCartPort {
-  deleteCart(cart: {
+  deleteCartItem(cartItem: {
     cartId: number;
   }): Promise<void | ThisError>;
 
-  deleteCartItem(cartItem: {
+  deleteCart(cart: {
     cartId: number;
   }): Promise<void | ThisError>;
 }

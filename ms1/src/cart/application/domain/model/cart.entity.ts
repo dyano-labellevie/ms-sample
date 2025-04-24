@@ -4,7 +4,6 @@ import { CartCode } from './cart-code.value';
 import {CartItem } from './cart-item.value';
 import crypto from 'crypto';
 import { Sku } from './sku.value';
-import { AddedToCartStateEvent } from '../event/added-to-cart-state.event';
 
 /**
  * カートを表すエンティティであり、集約ルート
@@ -19,8 +18,6 @@ export class Cart {
     private readonly cart_code: CartCode,
     // 値オブジェクトの配列を持つことで、カートの持つカート内商品が不正ではないことを保証する
     private readonly items: CartItem[],
-    // カート操作により発生したイベントを保持する
-    private readonly events: (AddedToCartStateEvent)[]
   ) {}
 
   /**
@@ -47,7 +44,7 @@ export class Cart {
     }
 
     // エラーがない場合は、Cartエンティティを含むTupleを返す
-    return [new Cart(u, cc, [], []), null];
+    return [new Cart(u, cc, []), null];
   }
 
   /**
@@ -106,7 +103,7 @@ export class Cart {
     // エラーがない場合は、Cartエンティティを含むTupleを返す
     // カート内商品も設定してカートエンティティを生成する
     //
-    return [new Cart(u, cc, items, []), null];
+    return [new Cart(u, cc, items), null];
   }
 
   /**
@@ -148,13 +145,6 @@ export class Cart {
    */
   public get cartCode(): string {
     return this.cart_code.value;
-  }
-
-  /**
-   * このカートに発生したイベントを取得する
-   */
-  public get occurredEvents(): AddedToCartStateEvent[] {
-    return this.events;
   }
 
   /**
@@ -212,21 +202,6 @@ export class Cart {
       // 入れ替える
       this.items[index] = newItem;
     }
-
-    // カートに商品が追加されたことをイベントを使って記録する
-    // イベントの生成（イベントは発生したものなので、過去形になる）
-    const event = AddedToCartStateEvent.occur(
-      this.userUuid,
-      this.cartCode,
-      {
-        skuCode: newItem.skuCode,
-        price: newItem.price,
-        quantity: newItem.quantity
-      }
-    )
-    // イベントを記録する
-    // コマンド処理のため、何も返さない。
-    this.events.push(event);
   }
 }
 

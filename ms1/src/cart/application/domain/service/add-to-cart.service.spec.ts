@@ -3,7 +3,6 @@ import { AddToCartService } from './add-to-cart.service';
 import { AddToCartCommand } from '../../port/in/add-to-cart.command';
 import { TemporarilyAllocateStockPort } from '../../port/out/temporarily-allocate-stock.port';
 import { SaveCartPort } from '../../port/out/save-cart.port';
-import { CartEventProducerPort } from '../../port/out/cart-event-producer.port';
 import { ThisError } from '../../../../error/this-error';
 
 class StockServiceMock implements TemporarilyAllocateStockPort {
@@ -27,19 +26,11 @@ class CartRepositoryMock implements SaveCartPort {
   }
 }
 
-class CartEventProducerMock implements CartEventProducerPort {
-  async publish<E>(event: E): Promise<void | ThisError> {
-    return;
-  }
-}
-
-
 describe('AddToCartService（ドメインサービス）', () => {
   describe('#addItem', () => {
     let sut: AddToCartService;
     let ss: TemporarilyAllocateStockPort;
     let cr: SaveCartPort;
-    let cep: CartEventProducerPort;
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -52,10 +43,6 @@ describe('AddToCartService（ドメインサービス）', () => {
           {
             provide: 'CartRepository',
             useClass: CartRepositoryMock
-          },
-          {
-            provide: 'CartEventProducer',
-            useClass: CartEventProducerMock
           }
         ],
       }).compile();
@@ -63,7 +50,6 @@ describe('AddToCartService（ドメインサービス）', () => {
       sut = module.get<AddToCartService>(AddToCartService);
       ss = module.get<TemporarilyAllocateStockPort>('StockService');
       cr = module.get<SaveCartPort>('CartRepository');
-      cep = module.get<CartEventProducerPort>('CartEventProducer');
     });
 
     test('カートに商品を追加できた', async () => {
@@ -75,14 +61,12 @@ describe('AddToCartService（ドメインサービス）', () => {
       };
       const ssSpy = jest.spyOn(ss, 'tempAllocateStock');
       const crSpy = jest.spyOn(cr, 'save');
-      const cepSpy = jest.spyOn(cep, 'publish');
 
       const error = await sut.addItem(cmd);
 
       expect(error).toBeUndefined();
       expect(ssSpy).toHaveBeenCalledTimes(1);
       expect(crSpy).toHaveBeenCalledTimes(1);
-      expect(cepSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

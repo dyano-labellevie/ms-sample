@@ -6,7 +6,6 @@ import { Cart } from '../model/cart.entity';
 import { Sku } from '../model/sku.value';
 import { TemporarilyAllocateStockPort } from '../../port/out/temporarily-allocate-stock.port';
 import { SaveCartPort } from '../../port/out/save-cart.port';
-import { CartEventProducerPort } from '../../port/out/cart-event-producer.port';
 
 /**
  * 入力Port（AddToCartUsecase）を実装しているサービス
@@ -17,7 +16,6 @@ export class AddToCartService implements AddToCartUseCase {
   public constructor(
     @Inject('StockService') private readonly stockService: TemporarilyAllocateStockPort,
     @Inject('CartRepository') private readonly cartRepository: SaveCartPort,
-    @Inject('CartEventProducer') private readonly cartEventProducer: CartEventProducerPort
   ) {}
 
   /**
@@ -67,10 +65,5 @@ export class AddToCartService implements AddToCartUseCase {
       cartCode: cart.cartCode,
       items: [...cart.cartItems],
     });
-
-    // イベント自体は集約であるCartが内部的に発行しているため、それを取りだす
-    const event = cart.occurredEvents[0];
-    // イベントを発行する（このイベントをどのシステムが使うかは、考慮しなくて良い）
-    await this.cartEventProducer.publish(event.message);
   }
 }

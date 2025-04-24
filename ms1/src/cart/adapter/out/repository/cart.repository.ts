@@ -38,7 +38,7 @@ export class CartRepository implements SaveCartPort, DeleteCartPort {
     console.log('Cart saved');
   }
 
-  async deleteItem(cart: {
+  async delete(cart: {
     cartId: number;
   }): Promise<void> {
     await this.drizzle
