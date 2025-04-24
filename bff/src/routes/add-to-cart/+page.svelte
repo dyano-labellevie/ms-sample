@@ -4,6 +4,10 @@
   let { form }: PageProps = $props();
 </script>
 
+<svelte:head>
+  <title>Add Cart Page</title>
+</svelte:head>
+
 <h1 class="text-xl mb-4">Add Cart Page</h1>
 
 <form class="flex flex-col gap-4 pr-8" method="POST" novalidate>

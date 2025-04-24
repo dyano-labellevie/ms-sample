@@ -5,6 +5,10 @@
   let { cart } = data;
 </script>
 
+<svelte:head>
+  <title>Get Cart Page</title>
+</svelte:head>
+
 <h1 class="text-xl mb-4">Get Cart Page</h1>
 
 <table class="w-full border">

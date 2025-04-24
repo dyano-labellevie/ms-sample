@@ -4,6 +4,10 @@
   let { form }: PageProps = $props();
 </script>
 
+<svelte:head>
+  <title>Delete Cart Page</title>
+</svelte:head>
+
 <h1 class="text-xl mb-4">Delete Cart Page</h1>
 
 <form class="flex flex-col gap-4 pr-8" method="POST" novalidate>
