@@ -43,7 +43,7 @@ import { CartController } from './adapter/in/web/cart.controller';
     {
       provide: 'CartRepository',
       useClass: CartRepository,
-    }
+    },
   ]
 })
 export class CartModule {}

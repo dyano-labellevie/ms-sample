@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Inject } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, Get, Param, Inject, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { MessagePattern, Payload, ClientKafka } from '@nestjs/microservices';
 import { GetToCartQueryRequest } from '../query/get-to-cart.query.request';
 import { AddToCartItemCommandRequest } from '../command/add-to-cart-item.command.request';
 import { AddToCartCommandRequest } from '../command/add-to-cart.command.request';
@@ -12,13 +12,24 @@ import { DeleteToCartUseCase } from '../../../application/port/in/delete-to-cart
  * APIのエンドポイント
  */
 @Controller('get-to-cart')
-export class CartController {
+export class CartController implements OnModuleInit, OnModuleDestroy {
   // APIが実行すべきユースケースをDIする
   constructor(
     @Inject('GetToCartService') private readonly getToCartService: GetToCartUseCase,
     @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
-    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase
+    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase,
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka
   ) {}
+
+  async onModuleInit() {
+    await this.kafkaClient.subscribeToResponseOf('dbserver1.public.cart_items');
+    await this.kafkaClient.subscribeToResponseOf('dbserver1.public.carts');
+    await this.kafkaClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.kafkaClient.close();
+  }
 
   @Get()
   // @TODO 本来はもっと実装が必要
