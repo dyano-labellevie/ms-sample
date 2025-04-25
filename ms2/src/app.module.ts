@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CartModule } from './cart/cart.module';
 import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
+import { CqrsModule } from '@nestjs/cqrs';
 import * as schema from './db/schema';
 
 @Module({
@@ -29,6 +30,7 @@ import * as schema from './db/schema';
         };
       },
     }),
+    CqrsModule.forRoot(),
     CartModule,
   ],
   controllers: [AppController],

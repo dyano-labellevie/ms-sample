@@ -111,10 +111,12 @@ services:
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.cart_items.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2 --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.cart_items.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-configs --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-offsets --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-statuses --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AddToCartService } from './application/domain/service/add-to-cart.service';
-import { GetToCartService } from './application/domain/service/get-to-cart.service';
-import { DeleteToCartService } from './application/domain/service/delete-to-cart.service';
+import { GetToCartAllHandler } from './application/handler/get-to-cart-all.handler';
+import { GetToCartHandler } from './application/handler/get-to-cart.handler';
+import { AddToCartItemHandler } from './application/handler/add-to-cart-item.handler';
+import { AddToCartHandler } from './application/handler/add-to-cart.handler';
+import { DeleteToCartItemHandler } from './application/handler/delete-to-cart-item.handler';
+import { DeleteToCartHandler } from './application/handler/delete-to-cart.handler';
 import { CartRepository } from './adapter/out/repository/cart.repository';
 import { CartController } from './adapter/in/web/cart.controller';
 
@@ -29,16 +32,28 @@ import { CartController } from './adapter/in/web/cart.controller';
   ],
   providers: [
     {
-      provide: 'AddToCartService',
-      useClass: AddToCartService,
+      provide: 'GetToCartAllHandler',
+      useClass: GetToCartAllHandler,
     },
     {
-      provide: 'GetToCartService',
-      useClass: GetToCartService,
+      provide: 'GetToCartHandler',
+      useClass: GetToCartHandler,
     },
     {
-      provide: 'DeleteToCartService',
-      useClass: DeleteToCartService,
+      provide: 'AddToCartItemHandler',
+      useClass: AddToCartItemHandler,
+    },
+    {
+      provide: 'AddToCartHandler',
+      useClass: AddToCartHandler,
+    },
+    {
+      provide: 'DeleteToCartItemHandler',
+      useClass: DeleteToCartItemHandler,
+    },
+    {
+      provide: 'DeleteToCartHandler',
+      useClass: DeleteToCartHandler,
     },
     {
       provide: 'CartRepository',

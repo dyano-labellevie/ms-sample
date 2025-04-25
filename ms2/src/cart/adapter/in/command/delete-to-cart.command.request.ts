@@ -1,5 +1,5 @@
 import { ValidationError } from '../../../../error/validation-error';
-import { DeleteToCartCommand } from '../../../application/port/in/delete-to-cart.command';
+import { DeleteToCartCommand } from '../../../application/port/in/command/delete-to-cart.command';
 
 /**
  * 外部からリクエストするためのコマンド

@@ -1,4 +1,4 @@
-import { ThisError } from '../../../../error/this-error';
+import { ThisError } from '../../../../../error/this-error';
 import { DeleteToCartCommand } from './delete-to-cart.command';
 
 /**
@@ -7,6 +7,5 @@ import { DeleteToCartCommand } from './delete-to-cart.command';
  * このインターフェイスを実装するのはドメイン層であり、アダプタ層は本インターフェイスを利用してユースケースを実行する
  */
 export interface DeleteToCartUseCase {
-  deleteCartItem(cmd: DeleteToCartCommand): Promise<void | ThisError>;
-  deleteItem(cmd: DeleteToCartCommand): Promise<void | ThisError>;
+  execute(cmd: DeleteToCartCommand): Promise<void | ThisError>;
 }

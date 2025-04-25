@@ -12,9 +12,9 @@ import { DeleteToCartUseCase } from '../../../application/port/in/delete-to-cart
 export class CartController implements OnModuleInit, OnModuleDestroy {
   // APIが実行すべきユースケースをDIする
   constructor(
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
     @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
-    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase,
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka
+    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase
   ) {}
 
   async onModuleInit() {

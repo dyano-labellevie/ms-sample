@@ -1,5 +1,5 @@
 import { ValidationError } from '../../../../error/validation-error';
-import { AddToCartItemCommand } from '../../../application/port/in/add-to-cart-item.command';
+import { AddToCartItemCommand } from '../../../application/port/in/command/add-to-cart-item.command';
 
 /**
  * 外部からリクエストするためのコマンド

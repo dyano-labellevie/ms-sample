@@ -1,23 +1,25 @@
 import { ValidationError } from '../../../../error/validation-error';
-import { GetToCartQuery } from '../../../application/port/in/query/get-to-cart.query';
+import { DeleteToCartItemCommand } from '../../../application/port/in/command/delete-to-cart-item.command';
 
 /**
- * 外部からリクエストするためのクエリ
+ * 外部からリクエストするためのコマンド
  * 入力用インターフェースを実装する
  */
-export class GetToCartQueryRequest implements GetToCartQuery {
+export class DeleteToCartItemCommandRequest implements DeleteToCartItemCommand {
   private constructor(
-      public readonly cartId: number
-  ) {}
+    public readonly cartId: number
+) {}
 
   /**
-   * クエリを生成するための名前付きコンストラクタ
+   * コマンドを生成するための名前付きコンストラクタ
    * リクエストのため、バリデーションも行う
    *
    * @param cartId
    * @returns
    */
-  public static createQuery(cartId: number): [GetToCartQuery, null] | [null, ValidationError[]] {
+  public static createCommand(
+    cartId: number
+  ): [DeleteToCartItemCommand, null] | [null, ValidationError[]] {
     const errors: ValidationError[] = [];
 
     // バリデーション
@@ -33,7 +35,7 @@ export class GetToCartQueryRequest implements GetToCartQuery {
       return [null, errors];
     }
 
-    // エラーがない場合は、クエリを含むTupleを返す
-    return [new GetToCartQueryRequest(cartId), null];
+    // エラーがない場合は、コマンドを含むTupleを返す
+    return [new DeleteToCartItemCommandRequest(cartId), null];
   }
 }

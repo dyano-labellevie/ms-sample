@@ -1,24 +1,22 @@
 import { Controller, Get, Param, Inject, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload, ClientKafka } from '@nestjs/microservices';
+import { GetToCartAllQueryRequest } from '../query/get-to-cart-all.query.request';
 import { GetToCartQueryRequest } from '../query/get-to-cart.query.request';
 import { AddToCartItemCommandRequest } from '../command/add-to-cart-item.command.request';
 import { AddToCartCommandRequest } from '../command/add-to-cart.command.request';
+import { DeleteToCartItemCommandRequest } from '../command/delete-to-cart-item.command.request';
 import { DeleteToCartCommandRequest } from '../command/delete-to-cart.command.request';
-import { GetToCartUseCase } from '../../../application/port/in/get-to-cart.usecase';
-import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.usecase';
-import { DeleteToCartUseCase } from '../../../application/port/in/delete-to-cart.usecase';
 
 /**
  * APIのエンドポイント
  */
 @Controller('get-to-cart')
 export class CartController implements OnModuleInit, OnModuleDestroy {
-  // APIが実行すべきユースケースをDIする
   constructor(
-    @Inject('GetToCartService') private readonly getToCartService: GetToCartUseCase,
-    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
-    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase,
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
   ) {}
 
   async onModuleInit() {
@@ -34,7 +32,14 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
   @Get()
   // @TODO 本来はもっと実装が必要
   public async getToCarts() {
-    return this.getToCartService.getItems();
+    const [query, queryError] = GetToCartAllQueryRequest.createQuery();
+    // このエラーはバリデーションエラー
+    if (queryError) {
+      // @TODO エラーレスポンスを返す
+      return
+    }
+
+    return this.queryBus.execute(query);
   }
 
   @Get(':userId')
@@ -47,7 +52,7 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
       return
     }
 
-    return this.getToCartService.getItem(query)
+    return await this.queryBus.execute(query);
   }
 
   @MessagePattern('dbserver1.public.cart_items')
@@ -77,8 +82,7 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      // ユースケースを実行
-      const error = await this.addToCartService.addCartItem(cmd);
+      const error = await this.commandBus.execute(cmd);
       console.log('Received CDC event Cart Item Created:', payload.after);
     }
   }
@@ -108,24 +112,25 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      // ユースケースを実行
-      const error = await this.addToCartService.addItem(cmd);
+      const error = await this.commandBus.execute(cmd);
       console.log('Received CDC event Cart Created:', payload.after);
     }
 
     if (payload.op === 'd') {
-      const [cmd, cmdError] = DeleteToCartCommandRequest.createCommand(
+      const [cmd1, cmdError1] = DeleteToCartItemCommandRequest.createCommand(
+        payload.before.id
+      );
+      const [cmd2, cmdError2] = DeleteToCartCommandRequest.createCommand(
         payload.before.id
       );
       // このエラーはバリデーションエラー
-      if (cmdError) {
+      if (cmdError1 || cmdError2) {
         // @TODO エラーレスポンスを返す
         return;
       }
 
-      // ユースケースを実行
-      await this.deleteToCartService.deleteCartItem(cmd);
-      await this.deleteToCartService.deleteItem(cmd);
+      await this.commandBus.execute(cmd1);
+      await this.commandBus.execute(cmd2);
       console.log('Received CDC event Cart Deleted:', payload.before);
     }
   }
