@@ -3,7 +3,7 @@ import { DeleteToCartCommand } from './delete-to-cart.command';
 
 /**
  * 入力用ポート
- * カートに商品を追加するというユースケースを表す
+ * カートを削除するというユースケースを表す
  * このインターフェイスを実装するのはドメイン層であり、アダプタ層は本インターフェイスを利用してユースケースを実行する
  */
 export interface DeleteToCartUseCase {
