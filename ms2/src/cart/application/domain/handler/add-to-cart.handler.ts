@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ThisError } from '../../../error/this-error';
-import { AddToCartUseCase } from '../port/in/command/add-to-cart.usecase';
-import { AddToCartCommand } from '../port/in/command/add-to-cart.command';
-import { AddToCartCommandRequest } from '../../adapter/in/command/add-to-cart.command.request';
-import { SaveCartPort } from '../port/out/save-cart.port';
+import { ThisError } from '../../../../error/this-error';
+import { AddToCartUseCase } from '../../port/in/command/add-to-cart.usecase';
+import { AddToCartCommand } from '../../port/in/command/add-to-cart.command';
+import { AddToCartCommandRequest } from '../../../adapter/in/command/add-to-cart.command.request';
+import { SaveCartPort } from '../../port/out/save-cart.port';
 
 /**
- * 入力Port（AddToCartUsecase）を実装しているサービス
+ * 入力Port（AddToCartUsecase）を実装しているハンドラ
  */
 @CommandHandler(AddToCartCommandRequest)
 export class AddToCartHandler implements ICommandHandler<AddToCartCommand>, AddToCartUseCase {

@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { ThisError } from '../../../error/this-error';
-import { GetToCartUseCase } from '../port/in/query/get-to-cart.usecase';
-import { GetToCartQuery } from '../port/in/query/get-to-cart.query';
-import { GetToCartQueryRequest } from '../../adapter/in/query/get-to-cart.query.request';
-import { GetCartPort } from '../port/out/get-cart.port';
+import { ThisError } from '../../../../error/this-error';
+import { GetToCartUseCase } from '../../port/in/query/get-to-cart.usecase';
+import { GetToCartQuery } from '../../port/in/query/get-to-cart.query';
+import { GetToCartQueryRequest } from '../../../adapter/in/query/get-to-cart.query.request';
+import { GetCartPort } from '../../port/out/get-cart.port';
 
 /**
- * 入力Port（GetToCartUsecase）を実装しているサービス
+ * 入力Port（GetToCartUsecase）を実装しているハンドラ
  */
 @QueryHandler(GetToCartQueryRequest)
 export class GetToCartHandler implements IQueryHandler<GetToCartQuery>, GetToCartUseCase {
