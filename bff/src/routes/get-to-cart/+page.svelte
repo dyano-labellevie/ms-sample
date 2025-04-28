@@ -2,7 +2,7 @@
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
-  let { carts } = data;
+  let { carts } = data || [];
 </script>
 
 <svelte:head>
