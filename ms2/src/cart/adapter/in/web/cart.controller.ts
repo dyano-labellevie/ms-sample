@@ -39,7 +39,7 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
       return
     }
 
-    return this.queryBus.execute(query);
+    return await this.queryBus.execute(query);
   }
 
   @Get(':userId')
@@ -129,8 +129,8 @@ export class CartController implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
-      await this.commandBus.execute(cmd1);
-      await this.commandBus.execute(cmd2);
+      const error1 = await this.commandBus.execute(cmd1);
+      const error2 = await this.commandBus.execute(cmd2);
       console.log('Received CDC event Cart Deleted:', payload.before);
     }
   }
