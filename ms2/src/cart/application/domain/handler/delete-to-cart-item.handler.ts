@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ThisError } from '../../../../error/this-error';
 import { DeleteToCartItemUseCase } from '../../port/in/command/delete-to-cart-item.usecase';
 import { DeleteToCartItemCommand } from '../../port/in/command/delete-to-cart-item.command';
-import { DeleteToCartItemCommandRequest } from 'src/cart/adapter/in/command/delete-to-cart-item.command.request';
+import { DeleteToCartItemCommandRequest } from '../../../adapter/in/command/delete-to-cart-item.command.request';
 import { DeleteCartPort } from '../../port/out/delete-cart.port';
 
 /**

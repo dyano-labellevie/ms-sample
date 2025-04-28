@@ -7,7 +7,7 @@ import { DeleteCartPort } from '../../../application/port/out/delete-cart.port';
 import * as schema from '../../../../db/schema';
 import { Cart } from '../../../application/domain/model/cart.entity';
 import { CartItem } from '../../../application/domain/model/cart-item.entity';
-import { ThisError } from 'src/error/this-error';
+import { ThisError } from '../../../../error/this-error';
 
 @Injectable()
 export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort {
