@@ -15,7 +15,7 @@ export class AddToCartService implements AddToCartUseCase {
   // Interfaceを利用してDIしているので、下記の様な記述が必要となる
   public constructor(
     @Inject('StockService') private readonly stockService: TemporarilyAllocateStockPort,
-    @Inject('CartRepository') private readonly cartRepository: SaveCartPort,
+    @Inject('CartRepository') private readonly cartRepository: SaveCartPort
   ) {}
 
   /**
@@ -60,7 +60,7 @@ export class AddToCartService implements AddToCartUseCase {
     // @TODO この時バージョンも確認する方が良いので、渡す様にする
     //       バージョンを確認することで、別途APIを呼び出されていた場合にカートが前の状態に戻ってしまうということを避けられる
     // @TODO 失敗したら在庫引当を戻す
-    await this.cartRepository.save({
+    const error = await this.cartRepository.save({
       userUuid: cart.userUuid,
       cartCode: cart.cartCode,
       items: [...cart.cartItems],
