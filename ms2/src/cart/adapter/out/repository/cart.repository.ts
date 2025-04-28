@@ -5,6 +5,9 @@ import { GetCartPort } from '../../../application/port/out/get-cart.port';
 import { SaveCartPort } from '../../../application/port/out/save-cart.port';
 import { DeleteCartPort } from '../../../application/port/out/delete-cart.port';
 import * as schema from '../../../../db/schema';
+import { Cart } from '../../../application/domain/model/cart.entity';
+import { CartItem } from '../../../application/domain/model/cart-item.entity';
+import { ThisError } from 'src/error/this-error';
 
 @Injectable()
 export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort {
@@ -12,16 +15,35 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     @Inject('DB_DEV') private readonly drizzle: PostgresJsDatabase<typeof schema>,
   ) {}
 
-  async findAll() {
-    return await this.drizzle.query.carts.findMany({
+  async findAll(): Promise<Cart[] | ThisError> {
+    const cartsData = await this.drizzle.query.carts.findMany({
       with: {
         cartItems: true,
       },
     });
+    const carts = cartsData.map((cartData) => {
+      const cart = Cart.init(
+        cartData.id,
+        cartData.userUuid!,
+        cartData.cartCode!
+      );
+      cartData.cartItems.map((cartItemData) => {
+        const cartItem = CartItem.init(
+          cartItemData.id,
+          cartItemData.skuCode!,
+          cartItemData.price!,
+          cartItemData.quantity!,
+          cartItemData.cartId!
+        );
+        cart.addItem(cartItem);
+      });
+      return cart;
+    });
+    return carts;
   }
 
-  async findOne(id: number) {
-    return await this.drizzle.query.carts.findFirst({
+  async findOne(id: number): Promise<Cart | ThisError> {
+    const cartData = await this.drizzle.query.carts.findFirst({
       with: {
         cartItems: true,
       },
@@ -29,13 +51,29 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
         return eq(fields.id, id);
       },
     });
+    const cart = Cart.init(
+      cartData!.id,
+      cartData?.userUuid!,
+      cartData?.cartCode!
+    );
+    cartData?.cartItems.map((cartItemData) => {
+      const cartItem = CartItem.init(
+        cartItemData.id,
+        cartItemData.skuCode!,
+        cartItemData.price!,
+        cartItemData.quantity!,
+        cartItemData.cartId!
+      );
+      cart.addItem(cartItem);
+    });
+    return cart;
   }
 
   async save(cart: {
     userUuid: string;
     cartCode: string;
     items: { skuCode: string; price: number; quantity: number }[];
-  }): Promise<void> {
+  }): Promise<void | ThisError> {
     const { userUuid, cartCode, items } = cart;
     const insertedCarts = await this.drizzle
       .insert(schema.carts)
@@ -60,7 +98,7 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     price: number;
     quantity: number;
     cartId: number;
-  }): Promise<void> {
+  }): Promise<void | ThisError> {
     let cart;
     while (!cart) {
       cart = await this.drizzle.query.carts.findFirst({
@@ -79,7 +117,7 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     id: number;
     userUuid: string;
     cartCode: string;
-  }): Promise<void> {
+  }): Promise<void | ThisError> {
     await this.drizzle
       .insert(schema.carts)
       .values({ ...cart });
@@ -87,7 +125,7 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
 
   async deleteCartItem(cart: {
     cartId: number;
-  }): Promise<void> {
+  }): Promise<void | ThisError> {
     await this.drizzle
       .delete(schema.cartItems)
       .where(eq(schema.cartItems.cartId, cart.cartId));
@@ -95,7 +133,7 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
 
   async deleteCart(cart: {
     cartId: number;
-  }): Promise<void> {
+  }): Promise<void | ThisError> {
     await this.drizzle
       .delete(schema.carts)
       .where(eq(schema.carts.id, cart.cartId));

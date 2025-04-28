@@ -147,7 +147,6 @@ services:
       - STATUS_STORAGE_TOPIC=my-connect-statuses
       - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError
 
-
   zookeeper:
     platform: linux/x86_64
     image: wurstmeister/zookeeper:latest

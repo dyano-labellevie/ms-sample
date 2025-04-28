@@ -5,6 +5,7 @@ import { GetToCartUseCase } from '../../port/in/query/get-to-cart.usecase';
 import { GetToCartQuery } from '../../port/in/query/get-to-cart.query';
 import { GetToCartQueryRequest } from '../../../adapter/in/query/get-to-cart.query.request';
 import { GetCartPort } from '../../port/out/get-cart.port';
+import { Cart } from '../model/cart.entity';
 
 /**
  * 入力Port（GetToCartUsecase）を実装しているハンドラ
@@ -15,7 +16,7 @@ export class GetToCartHandler implements IQueryHandler<GetToCartQuery>, GetToCar
     @Inject('CartRepository') private readonly cartRepository: GetCartPort
   ) {}
 
-  async execute(query: GetToCartQuery): Promise<any | ThisError> {
+  async execute(query: GetToCartQuery): Promise<Cart | ThisError> {
     return await this.cartRepository.findOne(query.cartId);
   }
 }

@@ -5,6 +5,7 @@ import { GetToCartAllUseCase } from '../../port/in/query/get-to-cart-all.usecase
 import { GetToCartAllQuery } from '../../port/in/query/get-to-cart-all.query';
 import { GetToCartAllQueryRequest } from '../../../adapter/in/query/get-to-cart-all.query.request';
 import { GetCartPort } from '../../port/out/get-cart.port';
+import { Cart } from '../model/cart.entity';
 
 /**
  * 入力Port（GetToCartAllUseCase）を実装しているハンドラ
@@ -15,7 +16,7 @@ export class GetToCartAllHandler implements IQueryHandler<GetToCartAllQuery>, Ge
     @Inject('CartRepository') private readonly cartRepository: GetCartPort
   ) {}
 
-  async execute(query: GetToCartAllQuery): Promise<any[] | ThisError> {
+  async execute(query: GetToCartAllQuery): Promise<Cart[] | ThisError> {
     return await this.cartRepository.findAll();
   }
 }

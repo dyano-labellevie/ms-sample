@@ -1,3 +1,4 @@
+import { Cart } from '../../../../application/domain/model/cart.entity';
 import { ThisError } from '../../../../../error/this-error';
 import { GetToCartQuery } from './get-to-cart.query';
 
@@ -7,5 +8,5 @@ import { GetToCartQuery } from './get-to-cart.query';
  * このインターフェイスを実装するのはドメイン層であり、アダプタ層は本インターフェイスを利用してユースケースを実行する
  */
 export interface GetToCartUseCase {
-  execute(query: GetToCartQuery): Promise<any | ThisError>;
+  execute(query: GetToCartQuery): Promise<Cart | ThisError>;
 }
